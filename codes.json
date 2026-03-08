@@ -1,6 +1,11 @@
 {
   "site_status": "open",
-  "net_codes": [],
+  "net_codes": [
+    {
+      "code": "2KXYttin2YHYqSDZg9mI2K8=",
+      "units": "وحدات"
+    }
+  ],
   "active_users": {
     "763372": "2026-03-16 00:34"
   }
