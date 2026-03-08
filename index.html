@@ -2,115 +2,97 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALHWARY VIP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALHWARY VIP SYSTEM</title>
     <style>
-        :root { 
-            --fire: #ff0000; 
-            --gold: #ffcc00;     
-            --dark: #080808;      
-        }
-
-        body { 
-            margin: 0; background: var(--dark); 
-            font-family: 'Courier New', monospace; 
-            color: #fff; display: flex; align-items: center; justify-content: center;
-            height: 100vh; overflow: hidden;
-        }
-        
-        /* تأثير الجزيئات في الخلفية */
-        #bg-canvas { position: fixed; top: 0; left: 0; z-index: 1; width: 100%; height: 100%; opacity: 0.5; }
-
-        .container { 
-            position: relative; z-index: 2; width: 90%; max-width: 360px;
-            border: 2px solid var(--fire); background: rgba(0, 0, 0, 0.9);
-            padding: 25px; text-align: center; border-radius: 12px;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
-        }
-
-        .header { font-size: 28px; font-weight: bold; color: var(--fire); letter-spacing: 2px; margin-bottom: 5px; text-shadow: 0 0 10px var(--fire); }
-        .eagle { font-size: 24px; margin-bottom: 15px; }
-        .info-text { font-size: 13px; color: #bbb; margin-bottom: 20px; }
-
-        /* صندوق الـ ID المطور */
-        .id-box { 
-            border: 2px dashed var(--gold); padding: 15px; margin-bottom: 25px;
-            background: rgba(255, 204, 0, 0.05); border-radius: 8px;
-        }
-        .id-label { font-size: 10px; color: var(--gold); letter-spacing: 1px; margin-bottom: 8px; }
-        .id-num { font-size: 26px; font-weight: bold; color: var(--gold); letter-spacing: 3px; }
-
-        /* الأزرار الاحترافية */
-        .action-btn {
-            display: block; width: 100%; padding: 14px; margin-bottom: 12px;
-            background: transparent; border: 1px solid var(--fire);
-            color: #fff; font-size: 15px; font-weight: bold; text-decoration: none;
-            border-radius: 5px; transition: 0.3s; cursor: pointer;
-            box-sizing: border-box;
-        }
-        .action-btn:hover { background: var(--fire); color: #000; box-shadow: 0 0 15px var(--fire); }
-        .btn-wa { border-color: #fff; color: #fff; }
-
-        .footer { font-size: 9px; color: #444; margin-top: 20px; letter-spacing: 1px; }
+        :root { --fire: #ff0000; --gold: #ffcc00; --dark: #080808; }
+        body { margin: 0; background: var(--dark); font-family: 'Courier New', monospace; color: #fff; text-align: center; }
+        .wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .panel { border: 2px solid var(--fire); background: #000; padding: 25px; width: 100%; max-width: 360px; border-radius: 12px; box-shadow: 0 0 20px var(--fire); }
+        .id-box { border: 2px dashed var(--gold); padding: 15px; margin: 20px 0; background: rgba(255, 204, 0, 0.05); }
+        .id-num { font-size: 26px; color: var(--gold); font-weight: bold; letter-spacing: 2px; }
+        .action-btn { display: block; width: 100%; padding: 14px; margin-top: 10px; background: transparent; border: 1px solid var(--fire); color: #fff; font-weight: bold; cursor: pointer; text-decoration: none; }
+        .code-list { display: none; margin-top: 20px; text-align: left; background: #111; padding: 10px; border: 1px solid var(--gold); }
+        .code-item { border-bottom: 1px solid #333; padding: 10px 0; color: var(--gold); }
     </style>
 </head>
-<body onload="startSystem()">
+<body onload="checkAccess()">
 
-<canvas id="bg-canvas"></canvas>
+<div class="wrapper">
+    <div id="login-screen" class="panel">
+        <h2 style="color:var(--fire)">ALHWARY VIP 🦅</h2>
+        <p id="status-msg">جارٍ التحقق من صلاحية الجهاز...</p>
+        
+        <div class="id-box">
+            <div style="font-size: 10px; color: var(--gold)">YOUR DEVICE ID</div>
+            <div class="id-num" id="myID">....</div>
+        </div>
 
-<div class="container">
-    <div class="header">ALHWARY VIP</div>
-    <div class="eagle">🦅</div>
-    
-    <div class="info-text">تم استخراج معرف الجهاز تلقائياً</div>
-
-    <div class="id-box">
-        <div class="id-label">: YOUR DEVICE ID</div>
-        <div class="id-num" id="displayID">LOADING...</div>
+        <button class="action-btn" onclick="copyID()">نسخ الـ ID</button>
+        <a href="https://wa.me/201556853817" class="action-btn" style="border-color:#fff">تفعيل الـ VIP</a>
     </div>
 
-    <button class="action-btn" onclick="copyMyID()">نسخ المعرف (ID)</button>
-    <a href="https://wa.me/201556853817" class="action-btn btn-wa">تفعيل العضوية VIP</a>
-
-    <div class="footer">ALHWARY SECURITY SYSTEM v7.0.0</div>
+    <div id="vip-screen" class="panel" style="display:none">
+        <h2 style="color:var(--gold)">WELCOME VIP 🦅</h2>
+        <div id="codes-container"></div>
+        <button class="action-btn" onclick="location.reload()">تحديث الأكواد</button>
+    </div>
 </div>
 
 <script>
-    function startSystem() {
-        // توليد ID لو مش موجود
+    const GITHUB_URL = "https://raw.githubusercontent.com/nnytttdh-tech/alhwary-vip/main/codes.json";
+
+    function getID() {
         if(!localStorage.getItem('alhwary_id')) {
             const hex = '0123456789ABCDEF';
             let id = '';
             for(let i=0; i<8; i++) id += hex[Math.floor(Math.random()*16)];
             localStorage.setItem('alhwary_id', id);
         }
-        document.getElementById('displayID').innerText = localStorage.getItem('alhwary_id');
-        initParticles();
+        return localStorage.getItem('alhwary_id');
     }
 
-    function copyMyID() {
-        const idText = document.getElementById('displayID').innerText;
-        navigator.clipboard.writeText(idText);
-        alert("🦅 تم نسخ معرف الهواري: " + idText);
-    }
-
-    // تأثير خلفية خفيف ومنظم
-    function initParticles() {
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        let p = [];
-        for(let i=0; i<50; i++) p.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*2+1, s:Math.random()*1+0.5});
-        function draw() {
-            ctx.clearRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = "#ff0000";
-            p.forEach(i => {
-                ctx.beginPath(); ctx.arc(i.x, i.y, i.r, 0, Math.PI*2); ctx.fill();
-                i.y -= i.s; if(i.y < 0) i.y = canvas.height;
-            });
-            requestAnimationFrame(draw);
+    async function checkAccess() {
+        const id = getID();
+        document.getElementById('myID').innerText = id;
+        
+        try {
+            const response = await fetch(GITHUB_URL + "?v=" + Date.now());
+            const data = await response.json();
+            
+            // التحقق إذا كان الـ ID موجود في قائمة التفعيل
+            if (data.active_users && data.active_users[id]) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('vip-screen').style.display = 'block';
+                displayCodes(data.net_codes);
+            } else {
+                document.getElementById('status-msg').innerText = "الجهاز غير مفعل. انسخ الـ ID وأرسله للمدير.";
+            }
+        } catch (e) {
+            document.getElementById('status-msg').innerText = "خطأ في الاتصال بالسيرفر.";
         }
-        draw();
+    }
+
+    function displayCodes(codes) {
+        const container = document.getElementById('codes-container');
+        if (codes.length === 0) {
+            container.innerHTML = "<p>لا توجد أكواد متاحة حالياً.</p>";
+            return;
+        }
+        let html = "";
+        codes.forEach(c => {
+            // فك التشفير وعرض الكود
+            html += `<div class="code-item">
+                        <b>الكود:</b> ${atob(c.code)} <br>
+                        <b>الوحدات:</b> ${c.units}
+                     </div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    function copyID() {
+        navigator.clipboard.writeText(getID());
+        alert("تم نسخ ID الهواري: " + getID());
     }
 </script>
 </body>
