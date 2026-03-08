@@ -3,134 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALHWARY VIP TERMINAL</title>
+    <title>DARK NET VIP TERMINAL</title>
     <style>
-        :root { --neon: #00ff41; --bg: #050505; }
-        body, html { margin: 0; padding: 0; background: var(--bg); font-family: monospace; overflow: hidden; color: var(--neon); text-align: center; }
-        #matrix { position: fixed; top: 0; left: 0; z-index: 1; opacity: 0.3; }
-        .container { position: relative; z-index: 2; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .terminal { background: rgba(0,0,0,0.95); border: 1px solid var(--neon); padding: 25px; width: 85%; max-width: 450px; box-shadow: 0 0 20px rgba(0,255,65,0.2); }
-        .status-header { border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
-        .code-box { border: 1px dashed var(--neon); margin: 10px 0; padding: 15px; font-size: 20px; background: rgba(0,255,65,0.05); }
+        /* تعريف الألوان الجديدة */
+        :root { 
+            --fire-red: #ff0f0f; /* الأحمر الدموي */
+            --glow-red: #ff4d4d; /* أحمر التوهج */
+            --gold: #ffb400;     /* الذهبي */
+            --bg: #030303;      /* الأسود العميق */
+        }
+
+        body { 
+            margin: 0; 
+            background: var(--bg); 
+            font-family: 'Courier New', monospace; 
+            color: #ccc; 
+            overflow: hidden; 
+            text-shadow: 0 0 5px rgba(255,15,15,0.3);
+        }
         
-        /* زرار المدير المطلب */
-        .admin-btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 30px;
-            background: transparent;
-            border: 1px solid var(--neon);
-            color: var(--neon);
-            text-decoration: none;
-            font-family: monospace;
-            font-size: 15px;
-            font-weight: bold;
+        /* خلفية جزيئات نارية متحركة بدلاً من الماتريكس */
+        #particles-js { 
+            position: fixed; 
+            top: 0; left: 0; 
+            z-index: 1; 
+            width: 100%; height: 100%;
+        }
+
+        .wrapper { 
+            position: relative; 
+            z-index: 2; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            padding: 20px; 
+        }
+        
+        /* الحاوية الرئيسية الحمراء (Red Gloom) */
+        .panel { 
+            border: 2px solid var(--fire-red); 
+            background: rgba(10, 0, 0, 0.95); 
+            padding: 30px; 
+            width: 100%; 
+            max-width: 400px; 
+            text-align: center; 
+            box-shadow: 0 0 25px rgba(255, 15, 15, 0.4); /* توهج أحمر */
+            border-radius: 8px;
+            animation: panel-glow 2s infinite alternate; /* حركة التوهج */
+        }
+
+        @keyframes panel-glow {
+            0% { box-shadow: 0 0 25px rgba(255, 15, 15, 0.3); }
+            100% { box-shadow: 0 0 40px rgba(255, 15, 15, 0.6); }
+        }
+
+        .title { 
+            font-size: 24px; 
+            letter-spacing: 4px; 
+            font-weight: bold; 
+            margin-bottom: 10px; 
+            color: var(--fire-red); 
+            text-shadow: 0 0 10px var(--glow-red);
+        }
+        .status { 
+            color: var(--gold); /* الذهبي للحالة */
+            font-size: 13px; 
+            margin-bottom: 25px; 
+            border-top: 1px solid #333; 
+            padding-top: 10px; 
+        }
+
+        /* صندوق الـ ID المخطط */
+        .id-container { 
+            border: 2px dashed var(--gold); /* إطار ذهبي مخطط */
+            padding: 20px; 
+            margin: 20px 0;
+            background: rgba(255, 180, 0, 0.05); /* خلفية ذهبية خفيفة */
             cursor: pointer;
             transition: 0.3s;
-            box-shadow: 0 0 10px rgba(0, 255, 65, 0.2);
         }
-        .admin-btn:hover {
-            background: var(--neon);
-            color: var(--bg);
-            box-shadow: 0 0 25px var(--neon);
+        .id-container:hover { background: rgba(255, 180, 0, 0.1); }
+
+        .id-label { font-size: 11px; color: #fff; opacity: 0.8; margin-bottom: 10px; }
+        .id-value { font-size: 30px; letter-spacing: 6px; font-weight: bold; color: var(--gold); text-shadow: 0 0 8px #ffb400; }
+        .copy-hint { font-size: 10px; color: #fff; opacity: 0.5; margin-top: 10px; }
+
+        /* الأزرار */
+        .btn {
+            display: block; width: 100%; padding: 15px; margin-top: 12px;
+            background: transparent; 
+            border: 1px solid var(--fire-red);
+            color: #fff; text-decoration: none; font-size: 15px; font-weight: bold;
+            cursor: pointer; transition: 0.3s;
+            box-sizing: border-box; /* ضمان العرض الصحيح */
         }
-        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 10px; margin-top: 25px; opacity: 0.6; }
-        .id-badge { font-size: 12px; color: #fff; background: #222; padding: 5px; border-radius: 3px; display: inline-block; margin-top: 10px; }
+        .btn:hover { 
+            background: var(--fire-red); 
+            color: #000; 
+            box-shadow: 0 0 20px rgba(255, 15, 15, 0.7); /* توهج قوي عند الوقوف */
+        }
+        
+        .version { font-size: 10px; margin-top: 30px; opacity: 0.3; color: #fff; }
     </style>
 </head>
-<body oncontextmenu="return false;">
+<body>
 
-<canvas id="matrix"></canvas>
+<div id="particles-js"></div>
 
-<div class="container">
-    <div class="terminal">
-        <div class="status-header">
-            <div style="font-size: 20px; letter-spacing: 2px; font-weight: bold;">ALHWARY VIP v5.0</div>
-            <div id="sysMsg" style="margin-top:5px;">> INITIALIZING...</div>
+<div class="wrapper">
+    <div class="panel">
+        <div class="title">ACCESS RESTRICTED</div>
+        <div class="status">> SYSTEM UNLOCKED | VIP ACCESS ONLY</div>
+        
+        <p style="font-size: 15px; color: #fff;">يرجى تفعيل معرف الـ VIP للوصول إلى المميزات</p>
+
+        <div class="id-container" onclick="copyID()">
+            <div class="id-label">YOUR UNIQUE VIP ID:</div>
+            <div class="id-value" id="myID">LOADING...</div>
+            <div class="copy-hint">[ انقر لنسخ المعرف ]</div>
         </div>
 
-        <div id="contentArea">
-            </div>
+        <button class="btn" onclick="copyID()">(ID) نسخ معرف الـ VIP</button>
+        <a href="https://wa.me/201556853817" class="btn">مراسلة الإدارة لتفعيل الـ VIP</a>
 
-        <div class="stats">
-            <div>PING: <span id="ping">0</span>ms</div>
-            <div>RADAR: <span id="radarStatus">ONLINE</span></div>
-            <div>STATUS: <span id="lockState">LOCKED</span></div>
-            <div>USER: <span id="userType">GUEST</span></div>
-        </div>
-        <footer style="font-size: 8px; margin-top: 15px; opacity: 0.3;">SYSTEM SECURED BY ALHWARY</footer>
+        <div class="version">DARK NET SECURITY VIP SYSTEMS v5.1.1</div>
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <script>
-    // --- تأثير الماتريكس الخلفية ---
-    const canvas = document.getElementById('matrix');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    const drops = Array(Math.floor(canvas.width/14)).fill(1);
-    function draw() {
-        ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.fillStyle = "#00ff41"; ctx.font = "14px monospace";
-        drops.forEach((y, i) => {
-            ctx.fillText("01"[Math.floor(Math.random()*2)], i*14, y*14);
-            if(y*14 > canvas.height && Math.random() > 0.975) drops[i] = 0;
-            drops[i]++;
-        });
+    // نظام الـ ID التلقائي
+    if(!localStorage.getItem('hw_id')) {
+        const chars = '0123456789ABCDEF';
+        let newId = '';
+        for(let i=0; i<8; i++) newId += chars[Math.floor(Math.random()*16)];
+        localStorage.setItem('hw_id', newId);
     }
-    setInterval(draw, 35);
+    const currentID = localStorage.getItem('hw_id');
+    document.getElementById('myID').innerText = currentID;
 
-    // --- نظام الرادار والتحقق ---
-    const DATA_URL = "https://raw.githubusercontent.com/nnytttdh-tech/ALHWARY-VIP-/main/codes.json";
-
-    // إنشاء ID عشوائي للمستخدم لو مش موجود عشان التفعيل
-    if(!localStorage.getItem('vip_id')) {
-        localStorage.setItem('vip_id', 'HW-' + Math.floor(1000 + Math.random() * 9000));
-    }
-    const myId = localStorage.getItem('vip_id');
-
-    async function updateSystem() {
-        const start = performance.now();
-        try {
-            // حل مشكلة الرادار بإضافة nocache لضمان جلب أحدث بيانات
-            const res = await fetch(DATA_URL + "?nocache=" + Date.now());
-            const data = await res.json();
-            
-            document.getElementById('ping').innerText = Math.floor(performance.now() - start);
-            document.getElementById('lockState').innerText = data.site_status.toUpperCase();
-            
-            // التحقق إذا كان الـ ID مفعل في قائمة active_users
-            const expiry = data.active_users[myId];
-
-            if(data.site_status === "open" || expiry) {
-                document.getElementById('sysMsg').innerHTML = "> <span style='color:white'>ACCESS GRANTED</span>";
-                document.getElementById('userType').innerText = expiry ? "VIP" : "USER";
-                
-                let html = "<div style='max-height: 250px; overflow-y: auto;'>";
-                data.net_codes.forEach(c => {
-                    html += `<div class="code-box">${atob(c.code)}<br><small style="font-size:10px">${c.units} Units</small></div>`;
-                });
-                html += "</div>";
-                document.getElementById('contentArea').innerHTML = html || "لا توجد أكواد حالياً";
-            } else {
-                document.getElementById('sysMsg').innerHTML = "> <span style='color:#ff3e3e'>SYSTEM RESTRICTED</span>";
-                document.getElementById('userType').innerText = "GUEST";
-                // عرض زرار الواتساب المطلب بالرقم المحدد
-                document.getElementById('contentArea').innerHTML = `
-                    <div style="margin: 20px 0; font-size: 14px;">
-                        يجب تفعيل اشتراكك للوصول للأكواد<br>
-                        <span class="id-badge">ID: ${myId}</span>
-                    </div>
-                    <a href="https://wa.me/201556853817" class="admin-btn">تفعيل الـ ID عن طريق المدير</a>
-                `;
-            }
-        } catch(e) { 
-            document.getElementById('sysMsg').innerText = "> RADAR ERROR"; 
-        }
+    function copyID() {
+        navigator.clipboard.writeText(currentID);
+        alert("تم نسخ معرف الـ VIP: " + currentID);
     }
 
-    // تحديث الرادار كل 3 ثواني لضمان الاستجابة السريعة
-    setInterval(updateSystem, 3000);
-    updateSystem();
+    // إعدادات خلفية الجزيئات النارية (Fire Particles)
+    particlesJS("particles-js", {
+        "particles": {
+            "number": { "value": 80 },
+            "color": { "value": "#ff0f0f" }, // لون النار
+            "shape": { "type": "circle" },
+            "opacity": { "value": 0.5, "random": true },
+            "size": { "value": 3, "random": true },
+            "line_linked": { "enable": false },
+            "move": { "enable": true, "speed": 4, "direction": "top", "random": true, "straight": false, "out_mode": "out" }
+        },
+        "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": false } } }
+    });
 </script>
 </body>
 </html>
