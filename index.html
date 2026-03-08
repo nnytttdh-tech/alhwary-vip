@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +13,7 @@
         .status-header { border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
         .code-box { border: 1px dashed var(--neon); margin: 10px 0; padding: 15px; font-size: 20px; background: rgba(0,255,65,0.05); }
         
-        /* الزرار الجديد المطلب */
+        /* زرار المدير المطلب */
         .admin-btn {
             display: inline-block;
             margin-top: 20px;
@@ -35,14 +35,17 @@
             box-shadow: 0 0 25px var(--neon);
         }
         .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 10px; margin-top: 25px; opacity: 0.6; }
+        .id-badge { font-size: 12px; color: #fff; background: #222; padding: 5px; border-radius: 3px; display: inline-block; margin-top: 10px; }
     </style>
 </head>
 <body oncontextmenu="return false;">
+
 <canvas id="matrix"></canvas>
+
 <div class="container">
     <div class="terminal">
         <div class="status-header">
-            <div style="font-size: 20px; letter-spacing: 2px;">ALHWARY VIP v5.0</div>
+            <div style="font-size: 20px; letter-spacing: 2px; font-weight: bold;">ALHWARY VIP v5.0</div>
             <div id="sysMsg" style="margin-top:5px;">> INITIALIZING...</div>
         </div>
 
@@ -51,13 +54,16 @@
 
         <div class="stats">
             <div>PING: <span id="ping">0</span>ms</div>
+            <div>RADAR: <span id="radarStatus">ONLINE</span></div>
             <div>STATUS: <span id="lockState">LOCKED</span></div>
+            <div>USER: <span id="userType">GUEST</span></div>
         </div>
+        <footer style="font-size: 8px; margin-top: 15px; opacity: 0.3;">SYSTEM SECURED BY ALHWARY</footer>
     </div>
 </div>
 
 <script>
-    // --- تأثير الماتريكس ---
+    // --- تأثير الماتريكس الخلفية ---
     const canvas = document.getElementById('matrix');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
@@ -73,42 +79,57 @@
     }
     setInterval(draw, 35);
 
-    // --- الربط بالبيانات ---
+    // --- نظام الرادار والتحقق ---
     const DATA_URL = "https://raw.githubusercontent.com/nnytttdh-tech/ALHWARY-VIP-/main/codes.json";
+
+    // إنشاء ID عشوائي للمستخدم لو مش موجود عشان التفعيل
+    if(!localStorage.getItem('vip_id')) {
+        localStorage.setItem('vip_id', 'HW-' + Math.floor(1000 + Math.random() * 9000));
+    }
+    const myId = localStorage.getItem('vip_id');
 
     async function updateSystem() {
         const start = performance.now();
         try {
-            const res = await fetch(DATA_URL + "?v=" + Date.now());
+            // حل مشكلة الرادار بإضافة nocache لضمان جلب أحدث بيانات
+            const res = await fetch(DATA_URL + "?nocache=" + Date.now());
             const data = await res.json();
             
             document.getElementById('ping').innerText = Math.floor(performance.now() - start);
             document.getElementById('lockState').innerText = data.site_status.toUpperCase();
+            
+            // التحقق إذا كان الـ ID مفعل في قائمة active_users
+            const expiry = data.active_users[myId];
 
-            if(data.site_status === "open") {
+            if(data.site_status === "open" || expiry) {
                 document.getElementById('sysMsg').innerHTML = "> <span style='color:white'>ACCESS GRANTED</span>";
-                let h = "";
+                document.getElementById('userType').innerText = expiry ? "VIP" : "USER";
+                
+                let html = "<div style='max-height: 250px; overflow-y: auto;'>";
                 data.net_codes.forEach(c => {
-                    h += `<div class="code-box">${atob(c.code)}<br><small style="font-size:10px">${c.units} Units</small></div>`;
+                    html += `<div class="code-box">${atob(c.code)}<br><small style="font-size:10px">${c.units} Units</small></div>`;
                 });
-                document.getElementById('contentArea').innerHTML = h || "No codes found";
+                html += "</div>";
+                document.getElementById('contentArea').innerHTML = html || "لا توجد أكواد حالياً";
             } else {
                 document.getElementById('sysMsg').innerHTML = "> <span style='color:#ff3e3e'>SYSTEM RESTRICTED</span>";
-                // الزرار الجديد مربوط برقمك المكتوب
+                document.getElementById('userType').innerText = "GUEST";
+                // عرض زرار الواتساب المطلب بالرقم المحدد
                 document.getElementById('contentArea').innerHTML = `
-                    <div style="margin: 20px 0; font-size: 14px; line-height: 1.6;">
-                        عذراً، اشتراكك غير مفعل حالياً<br>
-                        يرجى مراجعة الإدارة لتفعيل الـ ID
+                    <div style="margin: 20px 0; font-size: 14px;">
+                        يجب تفعيل اشتراكك للوصول للأكواد<br>
+                        <span class="id-badge">ID: ${myId}</span>
                     </div>
                     <a href="https://wa.me/201556853817" class="admin-btn">تفعيل الـ ID عن طريق المدير</a>
                 `;
             }
         } catch(e) { 
-            document.getElementById('sysMsg').innerText = "> CONNECTION ERROR"; 
+            document.getElementById('sysMsg').innerText = "> RADAR ERROR"; 
         }
     }
 
-    setInterval(updateSystem, 5000);
+    // تحديث الرادار كل 3 ثواني لضمان الاستجابة السريعة
+    setInterval(updateSystem, 3000);
     updateSystem();
 </script>
 </body>
