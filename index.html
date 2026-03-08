@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DARK NET VIP TERMINAL</title>
+    <title>ALHWARY VIP SYSTEM</title>
     <style>
-        /* تعريف الألوان الجديدة */
         :root { 
-            --fire-red: #ff0f0f; /* الأحمر الدموي */
-            --glow-red: #ff4d4d; /* أحمر التوهج */
-            --gold: #ffb400;     /* الذهبي */
-            --bg: #030303;      /* الأسود العميق */
+            --fire-red: #ff0f0f; 
+            --gold: #ffb400;     
+            --bg: #030303;      
         }
 
         body { 
@@ -19,16 +17,9 @@
             font-family: 'Courier New', monospace; 
             color: #ccc; 
             overflow: hidden; 
-            text-shadow: 0 0 5px rgba(255,15,15,0.3);
         }
         
-        /* خلفية جزيئات نارية متحركة بدلاً من الماتريكس */
-        #particles-js { 
-            position: fixed; 
-            top: 0; left: 0; 
-            z-index: 1; 
-            width: 100%; height: 100%;
-        }
+        #particles-js { position: fixed; top: 0; left: 0; z-index: 1; width: 100%; height: 100%; }
 
         .wrapper { 
             position: relative; 
@@ -41,7 +32,6 @@
             padding: 20px; 
         }
         
-        /* الحاوية الرئيسية الحمراء (Red Gloom) */
         .panel { 
             border: 2px solid var(--fire-red); 
             background: rgba(10, 0, 0, 0.95); 
@@ -49,118 +39,99 @@
             width: 100%; 
             max-width: 400px; 
             text-align: center; 
-            box-shadow: 0 0 25px rgba(255, 15, 15, 0.4); /* توهج أحمر */
+            box-shadow: 0 0 25px rgba(255, 15, 15, 0.4); 
             border-radius: 8px;
-            animation: panel-glow 2s infinite alternate; /* حركة التوهج */
-        }
-
-        @keyframes panel-glow {
-            0% { box-shadow: 0 0 25px rgba(255, 15, 15, 0.3); }
-            100% { box-shadow: 0 0 40px rgba(255, 15, 15, 0.6); }
         }
 
         .title { 
-            font-size: 24px; 
-            letter-spacing: 4px; 
+            font-size: 26px; 
+            letter-spacing: 2px; 
             font-weight: bold; 
-            margin-bottom: 10px; 
+            margin-bottom: 5px; 
             color: var(--fire-red); 
-            text-shadow: 0 0 10px var(--glow-red);
-        }
-        .status { 
-            color: var(--gold); /* الذهبي للحالة */
-            font-size: 13px; 
-            margin-bottom: 25px; 
-            border-top: 1px solid #333; 
-            padding-top: 10px; 
+            text-shadow: 0 0 10px var(--fire-red);
         }
 
-        /* صندوق الـ ID المخطط */
+        .sub-title {
+            color: var(--gold);
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
         .id-container { 
-            border: 2px dashed var(--gold); /* إطار ذهبي مخطط */
+            border: 2px dashed var(--gold); 
             padding: 20px; 
             margin: 20px 0;
-            background: rgba(255, 180, 0, 0.05); /* خلفية ذهبية خفيفة */
-            cursor: pointer;
-            transition: 0.3s;
+            background: rgba(255, 180, 0, 0.05); 
         }
-        .id-container:hover { background: rgba(255, 180, 0, 0.1); }
 
-        .id-label { font-size: 11px; color: #fff; opacity: 0.8; margin-bottom: 10px; }
-        .id-value { font-size: 30px; letter-spacing: 6px; font-weight: bold; color: var(--gold); text-shadow: 0 0 8px #ffb400; }
-        .copy-hint { font-size: 10px; color: #fff; opacity: 0.5; margin-top: 10px; }
+        .id-value { 
+            font-size: 32px; 
+            letter-spacing: 5px; 
+            font-weight: bold; 
+            color: var(--gold); 
+        }
 
-        /* الأزرار */
         .btn {
             display: block; width: 100%; padding: 15px; margin-top: 12px;
-            background: transparent; 
-            border: 1px solid var(--fire-red);
+            background: transparent; border: 1px solid var(--fire-red);
             color: #fff; text-decoration: none; font-size: 15px; font-weight: bold;
             cursor: pointer; transition: 0.3s;
-            box-sizing: border-box; /* ضمان العرض الصحيح */
         }
-        .btn:hover { 
-            background: var(--fire-red); 
-            color: #000; 
-            box-shadow: 0 0 20px rgba(255, 15, 15, 0.7); /* توهج قوي عند الوقوف */
-        }
+        .btn:hover { background: var(--fire-red); color: #000; }
         
-        .version { font-size: 10px; margin-top: 30px; opacity: 0.3; color: #fff; }
+        .version { font-size: 10px; margin-top: 30px; opacity: 0.3; }
     </style>
 </head>
-<body>
+<body onload="initAlhwary()">
 
 <div id="particles-js"></div>
 
 <div class="wrapper">
     <div class="panel">
-        <div class="title">ACCESS RESTRICTED</div>
-        <div class="status">> SYSTEM UNLOCKED | VIP ACCESS ONLY</div>
+        <div class="title">ALHWARY VIP</div>
+        <div class="sub-title">🦅</div>
         
-        <p style="font-size: 15px; color: #fff;">يرجى تفعيل معرف الـ VIP للوصول إلى المميزات</p>
+        <p style="font-size: 14px;">تم استخراج معرف الجهاز تلقائياً</p>
 
-        <div class="id-container" onclick="copyID()">
-            <div class="id-label">YOUR UNIQUE VIP ID:</div>
-            <div class="id-value" id="myID">LOADING...</div>
-            <div class="copy-hint">[ انقر لنسخ المعرف ]</div>
+        <div class="id-container">
+            <div style="font-size: 11px; margin-bottom: 10px;">YOUR DEVICE ID:</div>
+            <div class="id-value" id="myID">....</div>
         </div>
 
-        <button class="btn" onclick="copyID()">(ID) نسخ معرف الـ VIP</button>
-        <a href="https://wa.me/201556853817" class="btn">مراسلة الإدارة لتفعيل الـ VIP</a>
+        <button class="btn" onclick="copyID()">نسخ المعرف (ID)</button>
+        <a href="https://wa.me/201556853817" class="btn">تفعيل العضوية VIP</a>
 
-        <div class="version">DARK NET SECURITY VIP SYSTEMS v5.1.1</div>
+        <div class="version">ALHWARY SECURITY SYSTEM v6.0</div>
     </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <script>
-    // نظام الـ ID التلقائي
-    if(!localStorage.getItem('hw_id')) {
-        const chars = '0123456789ABCDEF';
-        let newId = '';
-        for(let i=0; i<8; i++) newId += chars[Math.floor(Math.random()*16)];
-        localStorage.setItem('hw_id', newId);
+    // الدالة التي تعمل فور الدخول للموقع
+    function initAlhwary() {
+        if(!localStorage.getItem('hw_id')) {
+            const chars = '0123456789ABCDEF';
+            let newId = '';
+            for(let i=0; i<8; i++) newId += chars[Math.floor(Math.random()*16)];
+            localStorage.setItem('hw_id', newId);
+        }
+        document.getElementById('myID').innerText = localStorage.getItem('hw_id');
     }
-    const currentID = localStorage.getItem('hw_id');
-    document.getElementById('myID').innerText = currentID;
 
     function copyID() {
-        navigator.clipboard.writeText(currentID);
-        alert("تم نسخ معرف الـ VIP: " + currentID);
+        const id = document.getElementById('myID').innerText;
+        navigator.clipboard.writeText(id);
+        alert("تم نسخ ID الهواري: " + id);
     }
 
-    // إعدادات خلفية الجزيئات النارية (Fire Particles)
     particlesJS("particles-js", {
         "particles": {
-            "number": { "value": 80 },
-            "color": { "value": "#ff0f0f" }, // لون النار
-            "shape": { "type": "circle" },
-            "opacity": { "value": 0.5, "random": true },
-            "size": { "value": 3, "random": true },
-            "line_linked": { "enable": false },
-            "move": { "enable": true, "speed": 4, "direction": "top", "random": true, "straight": false, "out_mode": "out" }
-        },
-        "interactivity": { "detect_on": "canvas", "events": { "onhover": { "enable": false } } }
+            "number": { "value": 60 },
+            "color": { "value": "#ff0f0f" },
+            "move": { "enable": true, "speed": 3, "direction": "top" }
+        }
     });
 </script>
 </body>
