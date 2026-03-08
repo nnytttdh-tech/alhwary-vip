@@ -1,14 +1,4 @@
 {
-    "site_status": "open",
-    "net_codes": [
-        {
-            "code": "2KXYttin2YHYqSDZg9mI2K8=",
-            "units": "\u0648\u062d\u062f\u0627\u062a"
-        }
-    ],
-    "active_users": {
-        "763372": "2026-03-16 00:34",
-        "287CA1C9": "2026-03-16 01:00",
-        "DFF16179": "2026-03-16 01:01"
-    }
+    "active_users": {},
+    "net_codes": []
 }
