@@ -2,137 +2,116 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALHWARY VIP SYSTEM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ALHWARY VIP</title>
     <style>
         :root { 
-            --fire-red: #ff0f0f; 
-            --gold: #ffb400;     
-            --bg: #030303;      
+            --fire: #ff0000; 
+            --gold: #ffcc00;     
+            --dark: #080808;      
         }
 
         body { 
-            margin: 0; 
-            background: var(--bg); 
+            margin: 0; background: var(--dark); 
             font-family: 'Courier New', monospace; 
-            color: #ccc; 
-            overflow: hidden; 
+            color: #fff; display: flex; align-items: center; justify-content: center;
+            height: 100vh; overflow: hidden;
         }
         
-        #particles-js { position: fixed; top: 0; left: 0; z-index: 1; width: 100%; height: 100%; }
+        /* تأثير الجزيئات في الخلفية */
+        #bg-canvas { position: fixed; top: 0; left: 0; z-index: 1; width: 100%; height: 100%; opacity: 0.5; }
 
-        .wrapper { 
-            position: relative; 
-            z-index: 2; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            min-height: 100vh; 
-            padding: 20px; 
-        }
-        
-        .panel { 
-            border: 2px solid var(--fire-red); 
-            background: rgba(10, 0, 0, 0.95); 
-            padding: 30px; 
-            width: 100%; 
-            max-width: 400px; 
-            text-align: center; 
-            box-shadow: 0 0 25px rgba(255, 15, 15, 0.4); 
-            border-radius: 8px;
+        .container { 
+            position: relative; z-index: 2; width: 90%; max-width: 360px;
+            border: 2px solid var(--fire); background: rgba(0, 0, 0, 0.9);
+            padding: 25px; text-align: center; border-radius: 12px;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
         }
 
-        .title { 
-            font-size: 26px; 
-            letter-spacing: 2px; 
-            font-weight: bold; 
-            margin-bottom: 5px; 
-            color: var(--fire-red); 
-            text-shadow: 0 0 10px var(--fire-red);
-        }
+        .header { font-size: 28px; font-weight: bold; color: var(--fire); letter-spacing: 2px; margin-bottom: 5px; text-shadow: 0 0 10px var(--fire); }
+        .eagle { font-size: 24px; margin-bottom: 15px; }
+        .info-text { font-size: 13px; color: #bbb; margin-bottom: 20px; }
 
-        .sub-title {
-            color: var(--gold);
-            font-size: 18px;
-            margin-bottom: 20px;
-            font-weight: bold;
+        /* صندوق الـ ID المطور */
+        .id-box { 
+            border: 2px dashed var(--gold); padding: 15px; margin-bottom: 25px;
+            background: rgba(255, 204, 0, 0.05); border-radius: 8px;
         }
+        .id-label { font-size: 10px; color: var(--gold); letter-spacing: 1px; margin-bottom: 8px; }
+        .id-num { font-size: 26px; font-weight: bold; color: var(--gold); letter-spacing: 3px; }
 
-        .id-container { 
-            border: 2px dashed var(--gold); 
-            padding: 20px; 
-            margin: 20px 0;
-            background: rgba(255, 180, 0, 0.05); 
+        /* الأزرار الاحترافية */
+        .action-btn {
+            display: block; width: 100%; padding: 14px; margin-bottom: 12px;
+            background: transparent; border: 1px solid var(--fire);
+            color: #fff; font-size: 15px; font-weight: bold; text-decoration: none;
+            border-radius: 5px; transition: 0.3s; cursor: pointer;
+            box-sizing: border-box;
         }
+        .action-btn:hover { background: var(--fire); color: #000; box-shadow: 0 0 15px var(--fire); }
+        .btn-wa { border-color: #fff; color: #fff; }
 
-        .id-value { 
-            font-size: 32px; 
-            letter-spacing: 5px; 
-            font-weight: bold; 
-            color: var(--gold); 
-        }
-
-        .btn {
-            display: block; width: 100%; padding: 15px; margin-top: 12px;
-            background: transparent; border: 1px solid var(--fire-red);
-            color: #fff; text-decoration: none; font-size: 15px; font-weight: bold;
-            cursor: pointer; transition: 0.3s;
-        }
-        .btn:hover { background: var(--fire-red); color: #000; }
-        
-        .version { font-size: 10px; margin-top: 30px; opacity: 0.3; }
+        .footer { font-size: 9px; color: #444; margin-top: 20px; letter-spacing: 1px; }
     </style>
 </head>
-<body onload="initAlhwary()">
+<body onload="startSystem()">
 
-<div id="particles-js"></div>
+<canvas id="bg-canvas"></canvas>
 
-<div class="wrapper">
-    <div class="panel">
-        <div class="title">ALHWARY VIP</div>
-        <div class="sub-title">🦅</div>
-        
-        <p style="font-size: 14px;">تم استخراج معرف الجهاز تلقائياً</p>
+<div class="container">
+    <div class="header">ALHWARY VIP</div>
+    <div class="eagle">🦅</div>
+    
+    <div class="info-text">تم استخراج معرف الجهاز تلقائياً</div>
 
-        <div class="id-container">
-            <div style="font-size: 11px; margin-bottom: 10px;">YOUR DEVICE ID:</div>
-            <div class="id-value" id="myID">....</div>
-        </div>
-
-        <button class="btn" onclick="copyID()">نسخ المعرف (ID)</button>
-        <a href="https://wa.me/201556853817" class="btn">تفعيل العضوية VIP</a>
-
-        <div class="version">ALHWARY SECURITY SYSTEM v6.0</div>
+    <div class="id-box">
+        <div class="id-label">: YOUR DEVICE ID</div>
+        <div class="id-num" id="displayID">LOADING...</div>
     </div>
+
+    <button class="action-btn" onclick="copyMyID()">نسخ المعرف (ID)</button>
+    <a href="https://wa.me/201556853817" class="action-btn btn-wa">تفعيل العضوية VIP</a>
+
+    <div class="footer">ALHWARY SECURITY SYSTEM v7.0.0</div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
 <script>
-    // الدالة التي تعمل فور الدخول للموقع
-    function initAlhwary() {
-        if(!localStorage.getItem('hw_id')) {
-            const chars = '0123456789ABCDEF';
-            let newId = '';
-            for(let i=0; i<8; i++) newId += chars[Math.floor(Math.random()*16)];
-            localStorage.setItem('hw_id', newId);
+    function startSystem() {
+        // توليد ID لو مش موجود
+        if(!localStorage.getItem('alhwary_id')) {
+            const hex = '0123456789ABCDEF';
+            let id = '';
+            for(let i=0; i<8; i++) id += hex[Math.floor(Math.random()*16)];
+            localStorage.setItem('alhwary_id', id);
         }
-        document.getElementById('myID').innerText = localStorage.getItem('hw_id');
+        document.getElementById('displayID').innerText = localStorage.getItem('alhwary_id');
+        initParticles();
     }
 
-    function copyID() {
-        const id = document.getElementById('myID').innerText;
-        navigator.clipboard.writeText(id);
-        alert("تم نسخ ID الهواري: " + id);
+    function copyMyID() {
+        const idText = document.getElementById('displayID').innerText;
+        navigator.clipboard.writeText(idText);
+        alert("🦅 تم نسخ معرف الهواري: " + idText);
     }
 
-    particlesJS("particles-js", {
-        "particles": {
-            "number": { "value": 60 },
-            "color": { "value": "#ff0f0f" },
-            "move": { "enable": true, "speed": 3, "direction": "top" }
+    // تأثير خلفية خفيف ومنظم
+    function initParticles() {
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+        let p = [];
+        for(let i=0; i<50; i++) p.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*2+1, s:Math.random()*1+0.5});
+        function draw() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = "#ff0000";
+            p.forEach(i => {
+                ctx.beginPath(); ctx.arc(i.x, i.y, i.r, 0, Math.PI*2); ctx.fill();
+                i.y -= i.s; if(i.y < 0) i.y = canvas.height;
+            });
+            requestAnimationFrame(draw);
         }
-    });
+        draw();
+    }
 </script>
 </body>
 </html>
