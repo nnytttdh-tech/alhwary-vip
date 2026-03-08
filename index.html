@@ -1,59 +1,73 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>ALHWARY VIP - تجربة البوت</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALHWARY VIP TERMINAL</title>
     <style>
-        :root { --r:#ff0000; --dark:#0a0a0a; --card:#151515; --gold:#f5c842; }
-        body { background:var(--dark); color:#fff; font-family:'Cairo', sans-serif; margin:0; }
-        .hdr { padding:20px; text-align:center; border-bottom:2px solid var(--r); background:#000; font-size:1.5rem; font-weight:900; }
-        .hdr span { color:var(--r); }
-        .container { padding:15px; display:flex; flex-direction:column; gap:15px; }
-        .card { background:var(--card); border-radius:15px; border:1px solid #333; padding:15px; animation: fadeIn 0.5s ease; }
-        .c-code { color:var(--gold); font-size:1.2rem; display:block; text-align:center; margin-bottom:10px; font-weight:900; letter-spacing:1px; }
-        .c-info { display:flex; justify-content:space-between; margin-bottom:15px; font-size:0.9rem; color:#aaa; }
-        .c-btn { background:linear-gradient(to bottom, #ff0000, #b30000); color:#fff; text-decoration:none; display:block; text-align:center; padding:12px; border-radius:10px; font-weight:900; }
-        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+        :root { --neon: #00ff41; --bg: #050505; }
+        body, html { margin: 0; padding: 0; background: var(--bg); font-family: monospace; overflow: hidden; color: var(--neon); }
+        #matrix { position: fixed; top: 0; left: 0; z-index: 1; opacity: 0.3; }
+        .container { position: relative; z-index: 2; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .terminal { background: rgba(0,0,0,0.95); border: 1px solid var(--neon); padding: 25px; width: 85%; max-width: 450px; text-align: center; }
+        .code-box { border: 1px dashed var(--neon); margin: 10px 0; padding: 15px; font-size: 20px; background: rgba(0,255,65,0.05); }
+        .status-header { border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 10px; margin-top: 20px; opacity: 0.7; }
     </style>
 </head>
-<body>
-    <div class="hdr">ALHWARY <span>VIP</span></div>
-    <div class="container" id="cardsBox">
-        <div style="text-align:center; padding:50px;">جاري المزامنة مع "بوت الهواري"...</div>
+<body oncontextmenu="return false;">
+<canvas id="matrix"></canvas>
+<div class="container">
+    <div class="terminal">
+        <div class="status-header">
+            <div style="font-size: 18px;">ALHWARY VIP v5.0</div>
+            <div id="sysMsg">> INITIALIZING...</div>
+        </div>
+        <div id="codes"></div>
+        <div class="stats">
+            <div>PING: <span id="ping">0</span>ms</div>
+            <div>STATUS: <span id="lockState">...</span></div>
+        </div>
     </div>
+</div>
+<script>
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    const drops = Array(Math.floor(canvas.width/14)).fill(1);
+    function draw() {
+        ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = "#00ff41"; ctx.font = "14px monospace";
+        drops.forEach((y, i) => {
+            ctx.fillText("01"[Math.floor(Math.random()*2)], i*14, y*14);
+            if(y*14 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
+        });
+    }
+    setInterval(draw, 35);
 
-    <script>
-        async function syncWithBot() {
-            try {
-                // بنقرأ من الملف المحلي data.json
-                // في الحقيقة البوت هو اللي هيحدث الملف ده لما ترفعه استضافة
-                const response = await fetch('data.json?v=' + Math.random());
-                const cards = await response.json();
+    // الرابط المحدث بناءً على مستودعك الجديد
+    const DATA_URL = "https://raw.githubusercontent.com/nnytttdh-tech/ALHWARY-VIP-/main/codes.json";
 
-                const box = document.getElementById('cardsBox');
-                box.innerHTML = '';
-
-                cards.forEach(item => {
-                    box.innerHTML += `
-                        <div class="card">
-                            <span class="c-code">${item.code}</span>
-                            <div class="c-info">
-                                <span>الوحدات: ${item.units}</span>
-                                <span>المتبقي: ${item.rem}</span>
-                            </div>
-                            <a href="tel:${item.code}" class="c-charge">شحن الكارت الآن</a>
-                        </div>`;
-                });
-            } catch (e) {
-                console.log("في انتظار تحديث البيانات...");
+    async function update() {
+        const start = performance.now();
+        try {
+            const res = await fetch(DATA_URL + "?v=" + Date.now());
+            const data = await res.json();
+            document.getElementById('ping').innerText = Math.floor(performance.now() - start);
+            document.getElementById('lockState').innerText = data.site_status.toUpperCase();
+            if(data.site_status === "open") {
+                document.getElementById('sysMsg').innerText = "> ACCESS GRANTED";
+                let h = "";
+                data.net_codes.forEach(c => { h += `<div class="code-box">${atob(c.code)}<br><small style="font-size:10px">${c.units} Units</small></div>`; });
+                document.getElementById('codes').innerHTML = h || "No codes in database";
+            } else {
+                document.getElementById('sysMsg').innerText = "> SYSTEM RESTRICTED";
+                document.getElementById('codes').innerHTML = "<p>يرجى تفعيل الـ ID للوصول للأكواد</p>";
             }
-        }
-
-        // تحديث كل 3 ثواني عشان تحس بالفرق وأنت بتجرب
-        setInterval(syncWithBot, 3000);
-        window.onload = syncWithBot;
-    </script>
+        } catch(e) { document.getElementById('sysMsg').innerText = "> CONNECTION ERROR"; }
+    }
+    setInterval(update, 5000); update();
+</script>
 </body>
 </html>
