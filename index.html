@@ -2,101 +2,86 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALHWARY VIP SECURITY</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ALHWARY VIP</title>
     <style>
         :root { --fire: #ff0000; --gold: #ffcc00; --bg: #050505; --safe: #00ff41; }
-        body { margin: 0; background: var(--bg); font-family: 'Courier New', monospace; color: #fff; text-align: center; }
-        .container { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-        .panel { width: 100%; max-width: 360px; border: 2px solid var(--fire); background: #000; padding: 25px; border-radius: 15px; box-shadow: 0 0 20px var(--fire); }
+        body { margin: 0; background: var(--bg); font-family: 'Courier New', monospace; color: #fff; display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow: hidden; }
+        .container { width: 90%; max-width: 340px; border: 2px solid var(--fire); background: rgba(0,0,0,0.95); padding: 25px; text-align: center; border-radius: 15px; box-shadow: 0 0 20px var(--fire); }
+        .header { font-size: 24px; font-weight: bold; color: var(--fire); text-shadow: 0 0 10px var(--fire); margin-bottom: 5px; cursor: pointer; }
+        .id-box { border: 2px dashed var(--gold); padding: 15px; margin: 20px 0; background: rgba(255,204,0,0.05); border-radius: 10px; }
+        .id-num { font-size: 26px; font-weight: bold; color: var(--gold); letter-spacing: 2px; }
+        .btn { display: block; width: 100%; padding: 15px; margin-top: 12px; background: transparent; border: 1px solid var(--fire); color: #fff; font-size: 15px; font-weight: bold; text-decoration: none; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .btn:active { background: var(--fire); color: #000; }
         
-        /* غرفة التحكم السرية */
-        #admin-room { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 100; padding: 20px; box-sizing: border-box; overflow-y: auto; border: 4px solid var(--gold); }
-        .stat-card { background: #111; border: 1px solid var(--fire); padding: 10px; margin-bottom: 10px; text-align: left; font-size: 12px; }
-        .alert { color: var(--fire); font-weight: bold; animation: blink 1s infinite; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0; } 100% { opacity: 1; } }
-
-        .btn { display: block; width: 100%; padding: 14px; margin-top: 10px; background: transparent; border: 1px solid var(--fire); color: #fff; font-weight: bold; cursor: pointer; border-radius: 5px; }
-        .id-box { border: 2px dashed var(--gold); padding: 15px; margin: 20px 0; }
+        /* شاشة المراقبة المخفية */
+        #monitor-room { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; padding: 20px; box-sizing: border-box; border: 4px solid var(--safe); }
+        .stat-line { text-align: left; font-size: 14px; margin-bottom: 12px; color: var(--safe); }
     </style>
 </head>
-<body onload="initSystem()">
+<body onload="setupMobile()">
 
-<div class="container" id="user-view">
-    <div class="panel">
-        <h2 style="color:var(--fire)" oncontextmenu="openAdmin(); return false;">ALHWARY VIP 🦅</h2>
-        <div id="status-msg">جارٍ فحص التفعيل...</div>
-        <div class="id-box">
-            <div id="myID" style="font-size: 26px; color: var(--gold); font-weight: bold;">....</div>
-        </div>
-        <button class="btn" onclick="contactManager()">تفعيل الـ VIP</button>
+<div class="container" id="main-ui">
+    <div class="header" id="secret-trigger">ALHWARY VIP 🦅</div>
+    <p id="msg" style="font-size:12px; color:#bbb;">فحص صلاحية الجهاز...</p>
+
+    <div class="id-box">
+        <div style="font-size:10px; color:var(--gold); margin-bottom:8px;">YOUR DEVICE ID</div>
+        <div class="id-num" id="uID">....</div>
     </div>
+
+    <button class="btn" onclick="copyID()">نسخ الـ ID</button>
+    <button class="btn" style="border-color:#fff" onclick="sendRequest()">تفعيل الـ VIP</button>
 </div>
 
-<div id="admin-room">
-    <h2 style="color:var(--gold)">غرفة مراقبة الهواري 🦅</h2>
-    <hr border="1" color="#ffb400">
-    
-    <div class="stat-card">
-        <div style="color:var(--safe)">● نظام الحماية: <span id="security-status">نشط</span></div>
-        <div>● إجمالي الزيارات: <span id="visit-count">0</span></div>
-        <div id="attack-alert" class="alert" style="display:none">⚠️ تنبيه: محاولة سحب بيانات مكتشفة!</div>
-    </div>
-
-    <div class="stat-card">
-        <h4 style="margin:0 0 5px 0">سجل النشاط (Live Log):</h4>
-        <div id="logs" style="font-size:10px; color:#888; height:150px; overflow:auto"></div>
-    </div>
-
-    <button class="btn" onclick="clearData()" style="border-color:var(--fire)">تصفير سجلات السحب</button>
-    <button class="btn" onclick="closeAdmin()" style="border-color:var(--gold)">الخروج من الغرفة</button>
+<div id="monitor-room">
+    <h3 style="color:var(--safe)">🛡️ SYSTEM MONITORING...</h3>
+    <div class="stat-line">> STATUS: ACCESS GRANTED</div>
+    <div class="stat-line">> THREATS: 0 DETECTED</div>
+    <div class="stat-line">> DATA LEAK: SECURE</div>
+    <div class="stat-line">> PING: 119ms</div>
+    <br>
+    <button class="btn" onclick="document.getElementById('monitor-room').style.display='none'">الخروج من النظام</button>
 </div>
 
 <script>
-    // نظام مراقبة الاختراق
-    let logCount = 0;
-    function addLog(msg) {
-        const logDiv = document.getElementById('logs');
-        const time = new Date().toLocaleTimeString();
-        logDiv.innerHTML = `[${time}] ${msg}<br>` + logDiv.innerHTML;
+    function generateID() {
+        if(!localStorage.getItem('al_id')) {
+            const hex = '0123456789ABCDEF';
+            let res = '';
+            for(let i=0; i<8; i++) res += hex[Math.floor(Math.random()*16)];
+            localStorage.setItem('al_id', res);
+        }
+        return localStorage.getItem('al_id');
     }
 
-    // كشف محاولة "فحص العنصر" أو سحب الكود
-    document.onkeydown = function(e) {
-        if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 73)) {
-            document.getElementById('attack-alert').style.display = 'block';
-            addLog("محاولة فتح أدوات المطور (F12)!");
-            return false;
-        }
-    };
+    function setupMobile() {
+        document.getElementById('uID').innerText = generateID();
+        document.getElementById('msg').innerText = "الجهاز غير مفعل. انسخ الـ ID وأرسله للمدير.";
+        
+        // ميزة الموبايل: ضغطة مطولة 3 ثواني تفتح المراقبة
+        let timer;
+        const trigger = document.getElementById('secret-trigger');
+        trigger.addEventListener('touchstart', () => { timer = setTimeout(openAdmin, 3000); });
+        trigger.addEventListener('touchend', () => { clearTimeout(timer); });
+    }
 
     function openAdmin() {
-        const pass = prompt("أدخل كود الدخول السري يا هواري:");
-        if(pass === "1234") { // غير كلمة السر من هنا
-            document.getElementById('admin-room').style.display = 'block';
-            addLog("تم الدخول لغرفة التحكم بواسطة المدير.");
-        } else {
-            alert("ممنوع الاقتراب!");
+        const p = prompt("كلمة سر غرفة المراقبة:");
+        if(p === "0000") { // كلمة السر الافتراضية
+            document.getElementById('monitor-room').style.display = 'block';
         }
     }
 
-    function closeAdmin() { document.getElementById('admin-room').style.display = 'none'; }
-
-    function initSystem() {
-        // عداد زيارات وهمي (ممكن تربطه بداتابيز)
-        let visits = localStorage.getItem('visits') || 0;
-        visits++;
-        localStorage.setItem('visits', visits);
-        document.getElementById('visit-count').innerText = visits;
-        addLog("مستخدم جديد دخل الموقع.");
-        
-        // جلب الـ ID
-        const id = localStorage.getItem('alhwary_id') || "NEW_USER";
-        document.getElementById('myID').innerText = id;
+    function sendRequest() {
+        const id = generateID();
+        const text = `يا هواري فعل لي الـ ID ده: ${id}`;
+        window.open(`https://wa.me/201556853817?text=${encodeURIComponent(text)}`, '_blank');
     }
 
-    function contactManager() {
-        window.open(`https://wa.me/201556853817?text=تفعيل_ID_${document.getElementById('myID').innerText}`);
+    function copyID() {
+        navigator.clipboard.writeText(generateID());
+        alert("تم نسخ ID الهواري بنجاح 🦅");
     }
 </script>
 </body>
