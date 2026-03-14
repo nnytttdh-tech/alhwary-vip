@@ -1,12 +1,4 @@
 {
-  "active_users": {
-    "F03E87F0": "2026-03-14T17:49:15.524497"
-  },
-  "net_codes": [
-    {
-      "code": "Kjg1OCo4NjU2OTQ0NzAzOTQ1Iw==",
-      "units": "170\n*858*016447467822#"
-    }
-  ],
-  "user_stats": {}
+    "active_users": {},
+    "net_codes": []
 }
