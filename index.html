@@ -2,107 +2,260 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ALHWARY VIP SYSTEM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𝑺𝑳𝑬𝑵𝑫𝑬𝑶 𝑺𝑻𝑶𝑹𝑬™ | المنصة المعتمدة للشحن الفوري</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --fire: #ff0000; --gold: #ffcc00; --bg: #050505; --safe: #00ff41; }
-        body { margin: 0; background: var(--bg); font-family: 'Courier New', monospace; color: #fff; display: flex; align-items: center; justify-content: center; min-height: 100vh; overflow-x: hidden; }
-        .container { width: 90%; max-width: 340px; border: 2px solid var(--fire); background: rgba(0,0,0,0.95); padding: 25px; text-align: center; border-radius: 15px; box-shadow: 0 0 30px rgba(255, 0, 0, 0.3); }
-        .header { font-size: 26px; font-weight: bold; color: var(--fire); text-shadow: 0 0 10px var(--fire); cursor: pointer; }
-        .id-box { border: 2px dashed var(--gold); padding: 15px; margin: 20px 0; background: rgba(255, 204, 0, 0.05); border-radius: 10px; }
-        .id-num { font-size: 26px; font-weight: bold; color: var(--gold); letter-spacing: 3px; }
-        .btn { display: block; width: 100%; padding: 15px; margin-top: 12px; background: transparent; border: 1px solid var(--fire); color: #fff; font-size: 15px; font-weight: bold; text-decoration: none; border-radius: 8px; cursor: pointer; transition: 0.3s; }
-        .btn:active { background: var(--fire); color: #000; }
-        .code-card { background: #111; border: 1px solid var(--gold); padding: 12px; margin-bottom: 10px; text-align: right; border-radius: 5px; color: var(--gold); }
-        #monitor-room { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 999; padding: 20px; box-sizing: border-box; border: 4px solid var(--safe); overflow-y: auto; }
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap');
+        body { font-family: 'Cairo', sans-serif; background-color: #03050a; overflow-x: hidden; }
+        
+        .neon-purple { text-shadow: 0 0 12px rgba(168, 85, 247, 0.7), 0 0 25px rgba(168, 85, 247, 0.4); }
+        
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+        
+        .premium-card { 
+            background: linear-gradient(135deg, rgba(15, 12, 30, 0.8) 0%, rgba(7, 5, 15, 0.9) 100%);
+            border: 1px solid rgba(168, 85, 247, 0.15);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .premium-card:hover { 
+            transform: translateY(-5px); 
+            border-color: rgba(234, 179, 8, 0.5);
+            box-shadow: 0 15px 35px rgba(234, 179, 8, 0.15);
+        }
+
+        @keyframes thunder-ambient { 0%, 95%, 98%, 100% { background-color: transparent; } 96% { background-color: rgba(168, 85, 247, 0.03); } 97% { background-color: rgba(255, 255, 255, 0.05); } }
+        .thunder-layer { position: fixed; inset: 0; z-index: -2; pointer-events: none; animation: thunder-ambient 8s infinite; }
     </style>
 </head>
-<body onload="initAlhwary()">
+<body class="text-gray-200 min-h-screen flex flex-col justify-between">
 
-<div class="container" id="main-panel">
-    <div class="header" id="secret-btn">ALHWARY VIP 🦅</div>
-    
-    <div id="lock-screen">
-        <p id="msg" style="font-size: 13px; color: #ddd; margin-top: 10px;">جارٍ فحص التفعيل...</p>
-        <div class="id-box">
-            <div style="font-size: 10px; color: var(--gold); margin-bottom: 8px;">YOUR DEVICE ID</div>
-            <div class="id-num" id="displayID">....</div>
+    <div class="thunder-layer"></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <header class="border-b border-purple-950/40 bg-gray-950/80 backdrop-blur-md sticky top-0 z-40">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-black text-purple-500 italic tracking-wider neon-purple">𝑺𝑳𝑬𝑵𝑫𝑬𝑶 𝑺𝑻𝑶𝑹𝑬™</h1>
+            <button onclick="openAdminModal()" class="bg-purple-900/30 hover:bg-purple-800/50 border border-purple-500/30 text-purple-300 text-xs px-3 py-1.5 rounded-xl transition flex items-center gap-1">
+                <i class="fas fa-user-shield"></i> لوحة الأدمن
+            </button>
         </div>
-        <button class="btn" onclick="copyMyID()">نسخ الـ ID</button>
-        <button class="btn" style="border-color:#fff" onclick="contactManager()">تفعيل الـ VIP</button>
-    </div>
+    </header>
 
-    <div id="vip-screen" style="display:none">
-        <div style="color:var(--gold); margin-bottom:15px; font-weight:bold;">✅ تم التفعيل بنجاح</div>
-        <div id="codes-list"></div>
-        <button class="btn" onclick="location.reload()">تحديث الأكواد</button>
-    </div>
-</div>
+    <section class="container mx-auto px-4 py-8 text-center max-w-4xl">
+        <span class="bg-yellow-950/50 text-yellow-500 border border-yellow-600/30 text-[9px] font-bold px-4 py-1 rounded-full uppercase tracking-widest">AUTOMATED TELECOM CHECKOUT</span>
+        <h2 class="text-2xl md:text-4xl font-black mt-3 mb-2 tracking-tight text-white shadow-sm">إمبراطورية الشحن الرسمي المعتمد</h2>
+        <p class="text-gray-400 text-xs max-w-md mx-auto">اختر اللعبة والباكج، سيتم توليد الفاتورة فورياً وتحويلك لخط الدفع المباشر.</p>
+    </section>
 
-<div id="monitor-room">
-    <h3 style="color:var(--safe)">🛡️ SYSTEM MONITORING...</h3>
-    <div style="text-align:left; font-size:14px; color:var(--safe)">
-        > ACCESS: GRANTED<br>
-        > THREATS: 0 DETECTED<br>
-        > DATA LEAK: SECURE<br>
-        > PING: 119ms
-    </div>
-    <button class="btn" style="border-color:var(--safe); margin-top:20px" onclick="document.getElementById('monitor-room').style.display='none'">إغلاق</button>
-</div>
+    <main id="productsContainer" class="container mx-auto px-4 py-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl">
+        </main>
 
-<script>
-    const GITHUB_JSON = "https://raw.githubusercontent.com/nnytttdh-tech/alhwary-vip/main/codes.json";
-
-    function getID() {
-        if(!localStorage.getItem('hw_id')) {
-            const chars = '0123456789ABCDEF';
-            let res = '';
-            for(let i=0; i<8; i++) res += chars[Math.floor(Math.random()*16)];
-            localStorage.setItem('hw_id', res);
-        }
-        return localStorage.getItem('hw_id');
-    }
-
-    async function initAlhwary() {
-        const id = getID();
-        document.getElementById('displayID').innerText = id;
-        
-        // سر التفعيل السريع: منع الكاش
-        try {
-            const res = await fetch(GITHUB_JSON + "?nocache=" + Math.random());
-            const data = await res.json();
+    <div id="adminModal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-gray-950 border border-purple-900/50 rounded-2xl max-w-lg w-full p-6 space-y-4 max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div class="flex justify-between items-center border-b border-gray-900 pb-2">
+                <h3 class="text-sm font-black text-white flex items-center gap-2"><i class="fas fa-lock text-purple-500"></i> غرفة التحكم بالأسعار والمنتجات</h3>
+                <button onclick="closeAdminModal()" class="text-gray-500 hover:text-white text-xl">&times;</button>
+            </div>
             
-            if (data.active_users && data.active_users[id]) {
-                document.getElementById('lock-screen').style.display = 'none';
-                document.getElementById('vip-screen').style.display = 'block';
-                let html = "";
-                data.net_codes.forEach(c => {
-                    html += `<div class="code-card"><b>الكود:</b> ${atob(c.code)} <br><b>الوحدات:</b> ${c.units}</div>`;
+            <div class="space-y-3 bg-gray-900/40 p-3 rounded-xl border border-gray-950">
+                <h4 class="text-xs font-bold text-purple-400"><i class="fas fa-plus-circle"></i> إضافة باقة أو تعديل سعر منتج</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    <input id="adminGameName" type="text" placeholder="اسم اللعبة (مثال: ببجي موبايل)" class="bg-black border border-gray-800 p-2 rounded text-xs text-white focus:border-purple-500 outline-none">
+                    <input id="adminPackage" type="text" placeholder="الباقة (مثال: 660 شدة UC)" class="bg-black border border-gray-800 p-2 rounded text-xs text-white focus:border-purple-500 outline-none">
+                    <input id="adminPrice" type="text" placeholder="السعر (مثال: 430 جنيه)" class="bg-black border border-gray-800 p-2 rounded text-xs text-white focus:border-purple-500 outline-none">
+                    <input id="adminWallet" type="text" placeholder="رقم كاش المستلم" value="01556853817" class="bg-black border border-gray-800 p-2 rounded text-xs text-white focus:border-purple-500 outline-none">
+                </div>
+                <button onclick="addNewProduct()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded text-xs transition">إدراج وتحديث المتجر فوراً</button>
+            </div>
+
+            <div class="space-y-2">
+                <h4 class="text-xs font-bold text-yellow-500"><i class="fas fa-list"></i> جميع المنتجات المتاحة حالياً (اضغط لحذف المنتجات القديمة):</h4>
+                <div id="adminItemsList" class="space-y-1 max-h-44 overflow-y-auto text-[11px]">
+                    </div>
+            </div>
+            <p class="text-[10px] text-gray-500 text-center">تُحفظ كافة التغيرات تلقائياً داخل المتصفح.</p>
+        </div>
+    </div>
+
+    <footer class="border-t border-purple-950/30 bg-gray-950 text-center py-4 text-[10px] text-gray-600">
+        <p>© 2026 جميع الحقوق محفوظة لـ <span class="text-purple-500 font-bold">𝑺𝑳𝑬𝑵𝑫𝑬𝑶 𝑺𝑻𝑶𝑹Ｅ™</span></p>
+    </footer>
+
+    <script>
+        // 💾 بنك معلومات المنتجات الافتراضية المأخوذة من كودك الأصلي
+        const defaultProducts = [
+            // ببجي
+            { id: 1, game: 'ببجي (PUBG Mobile)', package: '60 شدة UC', price: '50 جنيه', wallet: '01556853817' },
+            { id: 2, game: 'ببجي (PUBG Mobile)', package: '325 شدة UC', price: '220 جنيه', wallet: '01556853817' },
+            { id: 3, game: 'ببجي (PUBG Mobile)', package: '660 شدة UC', price: '430 جنيه', wallet: '01556853817' },
+            { id: 4, game: 'ببجي (PUBG Mobile)', package: '1800 شدة UC', price: '1150 جنيه', wallet: '01556853817' },
+            // فري فاير
+            { id: 5, game: 'فري فاير (Free Fire)', package: '100 جوهرة', price: '45 جنيه', wallet: '01556853817' },
+            { id: 6, game: 'فري فاير (Free Fire)', package: '210 جوهرة', price: '90 جنيه', wallet: '01556853817' },
+            { id: 7, game: 'فري فاير (Free Fire)', package: '530 جوهرة', price: '210 جنيه', wallet: '01556853817' },
+            { id: 8, game: 'فري فاير (Free Fire)', package: '1080 جوهرة', price: '410 جنيه', wallet: '01556853817' },
+            // فيفا
+            { id: 9, game: 'فيفا موبايل (EA FC)', package: '500 نقطة FC', price: '120 جنيه', wallet: '01556853817' },
+            { id: 10, game: 'فيفا موبايل (EA FC)', package: '1050 نقطة FC', price: '240 جنيه', wallet: '01556853817' },
+            { id: 11, game: 'فيفا موبايل (EA FC)', package: '2800 نقطة FC', price: '580 جنيه', wallet: '01556853817' },
+            { id: 12, game: 'فيفا موبايل (EA FC)', package: '5750 نقطة FC', price: '1100 جنيه', wallet: '01556853817' },
+            // بلود سترايك
+            { id: 13, game: 'بلود سترايك (Blood Strike)', package: '100 جولد', price: '60 جنيه', wallet: '01556853817' },
+            { id: 14, game: 'بلود سترايك (Blood Strike)', package: '500 جولد', price: '280 جنيه', wallet: '01556853817' },
+            { id: 15, game: 'بلود سترايك (Blood Strike)', package: '1000 جولد', price: '540 جنيه', wallet: '01556853817' },
+            // روبلوكس
+            { id: 16, game: 'روبلوكس (Roblox)', package: '400 Robux', price: '150 جنيه', wallet: '01556853817' },
+            { id: 17, game: 'روبلوكس (Roblox)', package: '800 Robux', price: '290 جنيه', wallet: '01556853817' },
+            { id: 18, game: 'روبلوكس (Roblox)', package: '1700 Robux', price: '590 جنيه', wallet: '01556853817' },
+            // كود
+            { id: 19, game: 'كول اوف ديوتي (COD)', package: '80 نقطة CP', price: '40 جنيه', wallet: '01556853817' },
+            { id: 20, game: 'كول اوف ديوتي (COD)', package: '420 نقطة CP', price: '190 جنيه', wallet: '01556853817' },
+            { id: 21, game: 'كول اوف ديوتي (COD)', package: '880 نقطة CP', price: '370 جنيه', wallet: '01556853817' }
+        ];
+
+        // قراءة البيانات المحفوظة محلياً أو إرجاع القائمة الافتراضية
+        let currentProducts = JSON.parse(localStorage.getItem('slendeo_master_products')) || defaultProducts;
+
+        // دالة عرض المنتجات بواجهة العميل
+        function renderStoreFront() {
+            const container = document.getElementById('productsContainer');
+            container.innerHTML = '';
+
+            // تجميع الباقات تبعاً لكل لعبة
+            const groups = {};
+            currentProducts.forEach(p => {
+                if (!groups[p.game]) groups[p.game] = [];
+                groups[p.game].push(p);
+            });
+
+            // توليد كروت النيون الفخمة لكل لعبة ديناميكياً
+            for (const gameName in groups) {
+                // تحديد لون الأيقونة الافتراضي المناسب لكل لعبة
+                let iconColor = "text-yellow-500";
+                if(gameName.includes("فري فاير")) iconColor = "text-red-500";
+                if(gameName.includes("فيفا")) iconColor = "text-green-500";
+                if(gameName.includes("بلود")) iconColor = "text-orange-500";
+                if(gameName.includes("روبلوكس")) iconColor = "text-cyan-400";
+                if(gameName.includes("كول")) iconColor = "text-gray-400";
+
+                let cardHtml = `
+                    <div class="premium-card rounded-2xl p-5 flex flex-col justify-between">
+                        <div>
+                            <h4 class="text-base font-black text-white mb-3 flex items-center gap-2 border-b border-gray-900 pb-2">
+                                <i class="fas fa-gamepad ${iconColor}"></i> ${gameName}
+                            </h4>
+                            <div class="space-y-2.5">
+                `;
+
+                groups[gameName].forEach(item => {
+                    cardHtml += `
+                        <button onclick="checkout('${item.game}', '${item.package}', '${item.price}', '${item.wallet}')" class="w-full bg-gray-950/60 hover:bg-purple-900/20 border border-gray-800 text-right px-3 py-2 rounded-xl text-xs flex justify-between items-center transition">
+                            <span class="font-bold text-gray-200">${item.package}</span> 
+                            <span class="text-yellow-500 font-black">${item.price}</span>
+                        </button>
+                    `;
                 });
-                document.getElementById('codes-list').innerHTML = html || "لا توجد أكواد حالياً";
-            } else {
-                document.getElementById('msg').innerText = "الجهاز غير مفعل. اطلب التفعيل من المدير.";
+
+                cardHtml += `</div></div></div>`;
+                container.innerHTML += cardHtml;
             }
-        } catch (e) { document.getElementById('msg').innerText = "فشل المزامنة."; }
+        }
 
-        // تفعيل غرفة العمليات بالضغط المطول (3 ثواني)
-        let t;
-        const btn = document.getElementById('secret-btn');
-        btn.addEventListener('touchstart', () => t = setTimeout(() => {
-            if(prompt("كلمة السر:") === "0000") document.getElementById('monitor-room').style.display='block';
-        }, 3000));
-        btn.addEventListener('touchend', () => clearTimeout(t));
-    }
+        // دالة تحديث قائمة لوحة تحكم الأدمن للتحكم بالحذف
+        function renderAdminList() {
+            const listContainer = document.getElementById('adminItemsList');
+            listContainer.innerHTML = '';
+            currentProducts.forEach(p => {
+                listContainer.innerHTML += `
+                    <div class="flex justify-between items-center bg-gray-900 p-2 rounded mb-1 border border-gray-800">
+                        <span>[${p.game}] ➔ ${p.package} (${p.price})</span>
+                        <button onclick="deleteProduct(${p.id})" class="text-red-500 hover:text-red-400 font-bold bg-red-950/40 px-2 py-0.5 rounded transition">حذف</button>
+                    </div>
+                `;
+            });
+        }
 
-    function contactManager() {
-        const text = `يا هواري فعل لي الـ ID ده: ${getID()}`;
-        window.open(`https://wa.me/201556853817?text=${encodeURIComponent(text)}`, '_blank');
-    }
+        // دالة التحقق وفتح نافذة الأدمن بكلمة مرور مستحيل تخمينها
+        function openAdminModal() {
+            const password = prompt("الرجاء إدخال رمز التحقق السري لغرفة الأدمن:");
+            // كلمة المرور المعقدة والآمنة الجديدة
+            if (password === "SlEnDeO_StOrE#2026!@Master") { 
+                document.getElementById('adminModal').classList.remove('hidden');
+                renderAdminList();
+            } else if (password !== null) {
+                alert("رمز التحكم خاطئ! محاولة دخول غير مصرح بها.");
+            }
+        }
 
-    function copyMyID() {
-        navigator.clipboard.writeText(getID());
-        alert("تم نسخ معرف الهواري 🦅");
-    }
-</script>
+        function closeAdminModal() {
+            document.getElementById('adminModal').classList.add('hidden');
+        }
+
+        // إضافة منتج جديد أو تغيير أسعار
+        function addNewProduct() {
+            const game = document.getElementById('adminGameName').value.trim();
+            const packageText = document.getElementById('adminPackage').value.trim();
+            const price = document.getElementById('adminPrice').value.trim();
+            const wallet = document.getElementById('adminWallet').value.trim();
+
+            if (!game || !packageText || !price || !wallet) {
+                return alert("الرجاء ملء كل الخانات!");
+            }
+
+            const newProd = { id: Date.now(), game: game, package: packageText, price: price, wallet: wallet };
+            currentProducts.push(newProd);
+            saveDataToLocalStorage();
+            
+            document.getElementById('adminGameName').value = '';
+            document.getElementById('adminPackage').value = '';
+            document.getElementById('adminPrice').value = '';
+        }
+
+        // حذف باقة
+        function deleteProduct(id) {
+            if (confirm("هل تود إزالة هذه الباقة نهائياً؟")) {
+                currentProducts = currentProducts.filter(p => p.id !== id);
+                saveDataToLocalStorage();
+            }
+        }
+
+        // حفظ البيانات دائمياً وتحديث المتجر فوراً
+        function saveDataToLocalStorage() {
+            localStorage.setItem('slendeo_master_products', JSON.stringify(currentProducts));
+            renderStoreFront();
+            renderAdminList();
+        }
+
+        // نظام إرسال البيانات المباشر للواتساب للزبائن عند الشراء
+        function checkout(game, package, price, walletNumber) {
+            const playerID = prompt(`يا بطل اكتب الـ ID الخاص بك للعبة ${game}:`);
+            if(!playerID) return alert("إلغاء العملية. الـ ID مطلوب لإتمام الشحن المعتمد!");
+
+            const message = `🚨 *طلب شحن جديد معتمد من الستور* 🚨\n\n` +
+                            `🎮 *اللعبة:* ${game}\n` +
+                            `📦 *الباكج المطلوبة:* ${package}\n` +
+                            `🆔 *حساب اللاعب (ID):* ${playerID}\n\n` +
+                            `💵 *المبلغ المطلوب تحويله:* ${price}\n` +
+                            `📌 *رقم محفظة الكاش للتحويل:* ${walletNumber}\n\n` +
+                            `⚠️ _برجاء إرسال صورة لقطة شاشة (اسكرين) لإثبات التحويل فوراً ليتم تأكيد الشحن الفوري خلال دقيقتين._`;
+
+            window.open(`https://wa.me/201556853817?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        // بناء المتجر والبدء فوراً
+        renderStoreFront();
+
+        // تأثير مطر النيون
+        const canvas = document.getElementById('bg-canvas'); const ctx = canvas.getContext('2d'); let particles = [];
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas); resizeCanvas();
+        class Particle { constructor() { this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height; this.size = Math.random() * 2 + 0.5; this.speedY = Math.random() * 0.8 + 0.2; this.opacity = Math.random() * 0.3; } update() { this.y += this.speedY; if (this.y > canvas.height) { this.y = 0; this.x = Math.random() * canvas.width; } } draw() { ctx.fillStyle = `rgba(168, 85, 247, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); } }
+        for (let i = 0; i < 50; i++) { particles.push(new Particle()); }
+        function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); } if(ctx) animate();
+    </script>
 </body>
 </html>
+
